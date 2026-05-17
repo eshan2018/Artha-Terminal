@@ -37,23 +37,68 @@ Artha Terminal tracks **220 assets** across Indian (Nifty 100 + NSE ETFs) and US
 
 ## Run locally
 
-```bash
-# 1. Clone
-git clone https://github.com/<your-username>/artha-terminal.git
-cd artha-terminal
+### Prerequisites
+- **Python 3.12+** (exact version required due to pinned dependencies)
+- **pip** (Python package manager)
+- Internet connection (for live market data)
 
-# 2. Install dependencies
+### Installation steps
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/eshan2018/Artha-Terminal.git
+cd Artha-Terminal
+
+# 2. Create a virtual environment (recommended)
+python3.12 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 3. Add API keys
+# 4. Set up API keys
 cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-# Edit secrets.toml and add your GROQ_API_KEY
+# Edit secrets.toml with your actual API keys (see below)
 
-# 4. Launch
+# 5. Launch the app
 streamlit run home.py
 ```
 
-> **Python 3.12 required.** Dependencies are version-pinned in `requirements.txt`.
+The app will open at `http://localhost:8501` in your browser.
+
+---
+
+## Getting API Keys
+
+Two free APIs are required:
+
+### 1. Groq API (for AI financial analysis)
+1. Visit https://console.groq.com/keys
+2. Sign up or log in with your Groq account
+3. Click **"Create API Key"**
+4. Copy the key (starts with `gsk_`)
+5. Paste into `.streamlit/secrets.toml` as `GROQ_API_KEY`
+
+### 2. Alpha Vantage API (US stock data fallback)
+1. Visit https://www.alphavantage.co/api/
+2. Fill in the form to get a free API key
+3. You'll receive the key via email
+4. Paste into `.streamlit/secrets.toml` as `ALPHA_VANTAGE_API_KEY`
+
+Both free tiers are sufficient for single-user development.
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `ModuleNotFoundError: No module named 'yfinance'` | Ensure you're using Python 3.12: `python3.12 --version`. Reinstall deps: `pip install -r requirements.txt` |
+| `streamlit: command not found` | Activate your virtual environment: `source venv/bin/activate` (macOS/Linux) or `venv\Scripts\activate` (Windows) |
+| `GROQ_API_KEY not found` | Verify `.streamlit/secrets.toml` exists with your API key. Restart Streamlit: `streamlit run home.py` |
+| App runs but shows no data | Check your internet connection. API rate limits? Wait 1 minute and refresh. |
+| `Port 8501 already in use` | Use a different port: `streamlit run home.py --server.port 8502` |
+| Charts show "No data available" | This is normal if APIs are rate-limited or offline. Data auto-refreshes on next request (300s cache). |
 
 ---
 
@@ -99,12 +144,32 @@ artha-terminal/
 
 ## Configuration
 
-Create `.streamlit/secrets.toml`:
+After copying `.streamlit/secrets.toml.example` to `.streamlit/secrets.toml`, edit it with your API keys:
 
 ```toml
-GROQ_API_KEY = "gsk_..."           # Free at console.groq.com
-ALPHA_VANTAGE_API_KEY = "..."      # Free at alphavantage.co
+# .streamlit/secrets.toml (DO NOT commit this file — it's in .gitignore)
+
+GROQ_API_KEY = "gsk_your_actual_key_here"           # Get from console.groq.com
+ALPHA_VANTAGE_API_KEY = "your_actual_key_here"      # Get from alphavantage.co
 ```
+
+**Important:** Never share your API keys or commit `.streamlit/secrets.toml` to GitHub. The example file is safe to commit; the secrets file is protected by `.gitignore`.
+
+---
+
+## Usage
+
+Once the app launches (`http://localhost:8501`):
+
+1. **Home Page** — View live market pulse across Indian and US indices
+2. **India Market** — Explore Nifty 100 with portfolio builder, risk analysis, and AI insights
+3. **US Market** — S&P 500 analysis with the same suite of tools
+
+### Key features to try:
+- **Portfolio Builder** — Create a weighted portfolio and see projected returns with confidence intervals
+- **Search Intel** — Type any ticker and get AI-powered 3-statement financial analysis
+- **Risk vs Return** — Visualize efficient frontier and Security Market Line
+- **Glossary** — Learn financial terms with interactive Sharpe ratio calculator
 
 ---
 
