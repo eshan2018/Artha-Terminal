@@ -442,7 +442,9 @@ def get_usd_inr() -> float:
     except Exception:
         pass
 
-    return 85.5  # Hardcoded fallback — update periodically
+    import warnings
+    warnings.warn("USD/INR live fetch failed — using hardcoded fallback rate of 85.5. US prices may be slightly inaccurate.", stacklevel=2)
+    return 85.5  # Hardcoded fallback — update periodically if live feeds are consistently failing
 
 
 # ── Live quotes (home page pulse bar) ────────────────────────────────────────

@@ -127,10 +127,11 @@ def render_market_dashboard(
     universe_raw = _universe_arg(universe)
 
     # Load price data for all 110 tickers (cached 15 min)
-    with st.spinner(f"Loading {label} price data…"):
+    st.info(f"⏳ Fetching {label} market data for 110 assets — this takes 20–30 seconds on first load. Subsequent loads are instant (cached for 15 min).", icon=None)
+    with st.spinner(f"Downloading {label} price history from yfinance — please wait…"):
         df_daily, df_weekly = load_market_data(universe_raw, market, usd_inr)
     if df_daily.empty:
-        st.error("No market data loaded. Check API keys or network, then refresh.")
+        st.error("❌ No market data loaded. Check your internet connection or API keys, then refresh the page.")
         st.stop()  # Stop rendering — no data to show
 
     # Load market caps (cached 24 hours — separate wave after price data)

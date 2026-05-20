@@ -135,10 +135,9 @@ artha-terminal/
 
 | Source | Used for |
 |--------|---------|
-| **yfinance** | US equities, indices, ETFs, USD/INR FX, India 10Y G-Sec yield |
-| **NSE (jugaad-data / nsepython)** | Indian equity primary source |
+| **yfinance** | All equities, indices, ETFs (India + US), USD/INR FX, India 10Y G-Sec yield |
 | **Alpha Vantage** | US equities fallback |
-| **Groq (Llama 3.3 70B)** | AI financial statement analysis |
+| **Groq (Llama 3.3 70B)** | AI financial statement analysis (AI-generated — verify independently) |
 
 ---
 
