@@ -353,18 +353,19 @@ def portfolio_stats(
 # ── Verdict (heuristic signal) ───────────────────────────────────────────────
 
 def verdict(return_1y: float | None, sharpe: float | None) -> str | None:
-    """Heuristic verdict based on Sharpe and 1Y return.
+    """Heuristic quantitative signal based on Sharpe and 1Y return.
 
     Thresholds are illustrative defaults, NOT empirically backtested.
-    They should be treated as educational signals, not investment advice.
+    These are quantitative indicators only — NOT buy/sell recommendations.
+    Do not act on these signals without independent research.
     """
     if return_1y is None or sharpe is None:
         return None
     if sharpe >= 1 and return_1y > 8:      # Strong risk-adjusted return + solid absolute return
-        return "Buy"
+        return "Positive"
     if sharpe >= 0.35 and return_1y >= 0:   # Acceptable Sharpe + non-negative return
-        return "Hold"
-    return "Avoid"                           # Everything else
+        return "Neutral"
+    return "Caution"                         # Poor risk-adjusted metrics
 
 
 # ── Display formatting ───────────────────────────────────────────────────────

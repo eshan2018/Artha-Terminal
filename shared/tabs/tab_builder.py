@@ -77,10 +77,8 @@ def render(*, filtered, metrics, df_daily, df_weekly, market, usd_inr, profile, 
         recs["_rk_3y"]  = _pct_rank(recs["3Y%"].fillna(recs["1Y%"]))  # 3Y return rank (fallback to 1Y)
 
         # Low-volatility rank: lower vol → higher rank (hence negation)
-        _mdd_col = recs["Ticker"].map(
-            lambda t: float(filtered.loc[filtered["Ticker"] == t, "Volatility"].iloc[0])
-            if not filtered.loc[filtered["Ticker"] == t, "Volatility"].empty else None
-        )
+        # Use direct column from recs (already filtered) — O(n) not O(n²)
+        _mdd_col = recs["Volatility"]
         recs["_rk_mdd"] = _pct_rank(-_mdd_col.fillna(_mdd_col.median()))  # Negate so lower vol ranks higher
 
         # Composite score: weighted sum of all 4 ranks (0-100 scale)

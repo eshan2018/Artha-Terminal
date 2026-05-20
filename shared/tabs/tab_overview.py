@@ -1,6 +1,7 @@
 """Tab 0 — Market Overview: pulse bar + sortable data table."""
 from __future__ import annotations  # Allow modern type hints
 
+import pandas as pd     # DataFrame operations
 import streamlit as st  # Streamlit UI framework
 
 # Import formatting helpers from shared modules
@@ -67,7 +68,7 @@ def render(*, filtered, metrics, df_daily, df_weekly, market, usd_inr, profile, 
 
     # Format market cap as ₹ string (e.g. "₹1.2L Cr") or dash if missing
     overview["Market Cap"] = overview["Market Cap"].apply(
-        lambda x: fmt_inr(x) if x is not None and __import__("pandas").notna(x) else "—"
+        lambda x: fmt_inr(x) if x is not None and pd.notna(x) else "—"
     )
 
     # Drop the raw numeric Sharpe column (replaced by star-rated version)
@@ -81,8 +82,6 @@ def render(*, filtered, metrics, df_daily, df_weekly, market, usd_inr, profile, 
         "★★★ ≥ 1.5  ·  ★★ 0.5–1.49  ·  ★ 0–0.49  ·  ✕ negative Sharpe  ·  "
         "Volatility = weekly×√52 (long-term)  ·  Vol 1M = daily×√252 (short-term)"
     )
-
-    import pandas as pd  # Needed for style formatting
 
     # Render the interactive Streamlit dataframe with conditional coloring
     st.dataframe(

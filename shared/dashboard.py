@@ -13,6 +13,7 @@ from __future__ import annotations  # Allow modern type hints
 import html              # For escaping dynamic content in HTML (XSS prevention)
 from datetime import datetime  # For timestamps
 
+import pandas as pd      # For Series operations in source count
 import streamlit as st   # Streamlit UI framework
 
 # Import shared modules
@@ -127,9 +128,11 @@ def render_market_dashboard(
     universe_raw = _universe_arg(universe)
 
     # Load price data for all 110 tickers (cached 15 min)
-    st.info(f"⏳ Fetching {label} market data for 110 assets — this takes 20–30 seconds on first load. Subsequent loads are instant (cached for 15 min).", icon=None)
+    _loading_placeholder = st.empty()
+    _loading_placeholder.info("⏳ First load fetches 110 assets from yfinance — takes 20–30 seconds. Subsequent loads are instant (15 min cache).")
     with st.spinner(f"Downloading {label} price history from yfinance — please wait…"):
         df_daily, df_weekly = load_market_data(universe_raw, market, usd_inr)
+    _loading_placeholder.empty()  # Clear the message once data is loaded
     if df_daily.empty:
         st.error("❌ No market data loaded. Check your internet connection or API keys, then refresh the page.")
         st.stop()  # Stop rendering — no data to show
@@ -161,7 +164,7 @@ def render_market_dashboard(
     # ── Dashboard header ──────────────────────────────────────────────────
     ts         = datetime.now(IST).strftime("%d %b %Y, %H:%M:%S IST")  # Current time
     # Count how many tickers came from each data source
-    src_counts = __import__("pandas").Series(df_daily.attrs.get("sources", {})).value_counts().to_dict()
+    src_counts = pd.Series(df_daily.attrs.get("sources", {})).value_counts().to_dict()
     source_note = ", ".join(f"{k}: {v}" for k, v in src_counts.items()) or "N/A"
     fetched_at  = df_daily.attrs.get("fetched_at", "unknown")
 

@@ -9,6 +9,8 @@ import os              # For reading environment variables (API keys)
 import math            # For isnan/isinf checks
 import streamlit as st # For caching and secrets management
 import pandas as pd    # For DataFrame handling of financial data
+import yfinance as yf  # For fetching financial statements
+from groq import Groq  # For calling Llama 3.3 AI model
 
 
 def _fmt_m(val, label: str) -> str:
@@ -43,7 +45,6 @@ def _extract(ticker: str) -> dict | None:
     or None if the data is unavailable.
     """
     try:
-        import yfinance as yf
         t   = yf.Ticker(ticker)
         inc = t.financials      # Income Statement
         bal = t.balance_sheet   # Balance Sheet
@@ -155,7 +156,6 @@ Format: clean sections, numbers first, jargon explained inline. This is educatio
 
     # Call the Groq API with Llama 3.3 70B model
     try:
-        from groq import Groq
         client = Groq(api_key=api_key)
         msg = client.chat.completions.create(
             model="llama-3.3-70b-versatile",                # Free-tier model on Groq
