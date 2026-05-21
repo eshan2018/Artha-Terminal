@@ -129,9 +129,23 @@ def render(*, filtered, metrics, df_daily, df_weekly, market, usd_inr, profile, 
 
     # Get historical returns for the selected ticker
     ticker_row   = recs[recs["Ticker"] == wi_ticker]
+
+    # 1Y% is already a 1-year return = 1-year CAGR (no conversion needed)
     hist_cagr_1y = float(ticker_row["1Y%"].iloc[0]) / 100 if not ticker_row.empty and pd.notna(ticker_row["1Y%"].iloc[0]) else rates["index"]
-    hist_cagr_3y = float(ticker_row["3Y%"].iloc[0]) / 100 if not ticker_row.empty and pd.notna(ticker_row["3Y%"].iloc[0]) else hist_cagr_1y
-    ticker_cagr  = (hist_cagr_1y + hist_cagr_3y) / 2  # Blend 1Y and 3Y for a smoother estimate
+
+    # 3Y% is a TOTAL 3-year return — must convert to annualised CAGR: (1 + r)^(1/3) - 1
+    if not ticker_row.empty and pd.notna(ticker_row["3Y%"].iloc[0]):
+        total_3y     = float(ticker_row["3Y%"].iloc[0]) / 100
+        hist_cagr_3y = (1 + total_3y) ** (1 / 3) - 1  # Annualise the 3Y total return
+    else:
+        hist_cagr_3y = hist_cagr_1y
+
+    # Cap individual CAGRs at 60% to prevent freak 1-year outliers distorting long-term projections
+    hist_cagr_1y = min(hist_cagr_1y, 0.60)
+    hist_cagr_3y = min(hist_cagr_3y, 0.60)
+
+    # Blend 1Y and 3Y annualised CAGR — 3Y gets more weight as it's more representative
+    ticker_cagr  = 0.4 * hist_cagr_1y + 0.6 * hist_cagr_3y
 
     # Show the blended CAGR and inflation rate
     wi_c2.metric("Ticker Blended CAGR", f"{ticker_cagr*100:.1f}% / yr")
