@@ -552,6 +552,9 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
     border-radius: 6px;
     padding: 22px 18px;
     height: 100%;
+    min-height: 240px;  /* Force equal heights across the 2x4 grid */
+    display: flex;
+    flex-direction: column;
     transition: all 0.18s ease;
 }}
 .feature-card:hover {{
