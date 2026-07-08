@@ -584,6 +584,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
     gap: 14px;
     align-items: flex-start;
     margin-bottom: 10px;
+    min-height: 110px;  /* Equalise card heights across the 3x2 grid */
     transition: all 0.18s ease;
 }}
 .why-card:hover {{ background: var(--bg-elevated); border-color: var(--border-active); }}
