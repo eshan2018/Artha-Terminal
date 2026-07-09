@@ -1,4 +1,4 @@
-"""Per-tab render functions for Artha Terminal's market dashboard.
+"""Per-tab render functions for Nivesh Terminal's market dashboard.
 
 Each tab module exposes a render() function. This __init__.py re-exports
 them with clearer names so dashboard.py can import them all from one place.

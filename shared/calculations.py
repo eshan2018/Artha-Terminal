@@ -1,4 +1,4 @@
-"""Core financial mathematics for Artha Terminal.
+"""Core financial mathematics for Nivesh Terminal.
 
 Contains all return, volatility, Sharpe, risk, SIP, portfolio optimisation,
 and technical indicator calculations. No UI code — pure math only.

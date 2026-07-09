@@ -1,4 +1,4 @@
-"""Data loading pipeline for Artha Terminal.
+"""Data loading pipeline for Nivesh Terminal.
 
 Fetches price history from multiple sources (NSE, yfinance, Alpha Vantage),
 handles caching, currency conversion, and batch downloading for speed.

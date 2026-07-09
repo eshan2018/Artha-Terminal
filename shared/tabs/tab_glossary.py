@@ -15,7 +15,7 @@ _TERMS = [
      "Sharpe Ratio",
      "**Formula:** `(Annualised Mean Weekly Return − Risk-Free Rate) / Annualised Volatility`\n\n"
      "Measures how much excess return you earn per unit of risk. "
-     "Artha Terminal uses the **annualised mean of weekly returns** (mean weekly return × 52) as the numerator "
+     "Nivesh Terminal uses the **annualised mean of weekly returns** (mean weekly return × 52) as the numerator "
      "— more statistically robust than a point-in-time 1Y return. "
      "The risk-free rate is fetched live from India's 10Y G-Sec yield (^INBMK via NSE), with a 6.5% fallback.\n\n"
      "**Example:** A Sharpe of 1.2 means for every 1% of risk taken, you earned 1.2% above the risk-free rate.",
@@ -40,7 +40,7 @@ _TERMS = [
     ("Volatility", "volatility standard deviation risk",
      "Annualised Volatility",
      "Standard deviation of periodic returns, scaled to annual. "
-     "Artha Terminal shows two versions:\n\n"
+     "Nivesh Terminal shows two versions:\n\n"
      "- **Long-term Vol** = `σ(weekly returns) × √52` — suitable for 1Y+ holding periods\n"
      "- **Vol 1M** = `σ(daily returns) × √252` — suitable for ~1M holding period\n\n"
      "Higher volatility = wider return distribution = higher risk.",
@@ -60,7 +60,7 @@ _TERMS = [
      "- **RSI > 70**: Overbought — possible pullback\n"
      "- **RSI < 30**: Oversold — possible bounce\n"
      "- **RSI 40–60**: Neutral zone\n\n"
-     "Artha Terminal uses the 14-day EMA-smoothed RSI.",
+     "Nivesh Terminal uses the 14-day EMA-smoothed RSI.",
      "var(--accent)"),
 
     ("SEBI Risk Categories", "sebi risk profile conservative aggressive",
@@ -78,7 +78,7 @@ _TERMS = [
     ("Efficient Frontier", "efficient frontier portfolio theory mpt markowitz",
      "Efficient Frontier (Modern Portfolio Theory)",
      "The set of portfolios that maximise return for a given level of risk.\n\n"
-     "Artha Terminal plots **2,000 random weight combinations** (Monte Carlo) to approximate the frontier. "
+     "Nivesh Terminal plots **2,000 random weight combinations** (Monte Carlo) to approximate the frontier. "
      "The gold star = max Sharpe portfolio. The cyan diamond = min volatility portfolio.\n\n"
      "Portfolios **above and to the left** of the frontier are impossible. "
      "Portfolios **below** are inefficient — you can do better.",

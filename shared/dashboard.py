@@ -1,4 +1,4 @@
-"""Artha Terminal — market dashboard orchestrator.
+"""Nivesh Terminal — market dashboard orchestrator.
 
 This is the central hub that:
 1. Shows the sidebar risk profiler questionnaire
@@ -113,7 +113,7 @@ def render_market_dashboard(
     """
     # Configure the page layout and title
     st.set_page_config(
-        page_title=f"Artha Terminal — {label}",
+        page_title=f"Nivesh Terminal — {label}",
         layout="wide",                       # Use full screen width
         initial_sidebar_state="expanded",    # Show sidebar for questionnaire
     )
@@ -171,7 +171,7 @@ def render_market_dashboard(
     # Render the dashboard title with live stats
     flag = "🇮🇳" if market == "india" else "🇺🇸"
     st.markdown(
-        f'<div class="dash-title">{flag} Artha Terminal — {html.escape(label)}</div>'
+        f'<div class="dash-title">{flag} Nivesh Terminal — {html.escape(label)}</div>'
         f'<div class="dash-sub">'
         f'{ts} &nbsp;|&nbsp; USD/INR ₹{usd_inr:.2f} &nbsp;|&nbsp; {html.escape(source_note)}'
         f' &nbsp;|&nbsp; <span style="color:var(--text-muted)">data fetched {html.escape(fetched_at)}'

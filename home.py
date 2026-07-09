@@ -7,7 +7,7 @@
 #   - Live marquee ticker bar (12 global indices)
 #   - Market selection cards (India + US)
 #   - Today's Intelligence panel (top gainer, biggest decline, breadth, sentiment)
-#   - Feature showcase, how-it-works steps, why-artha section
+#   - Feature showcase, how-it-works steps, why-nivesh section
 #   - Footer with disclaimer
 # ================================================================
 
@@ -21,7 +21,7 @@ from shared.theme import inject_theme                  # CSS design system injec
 
 # ── Page configuration (must be the first Streamlit call) ─────────────────────
 st.set_page_config(
-    page_title="Artha Terminal — Wealth Intelligence",  # Browser tab title
+    page_title="Nivesh Terminal — Wealth Intelligence",  # Browser tab title
     page_icon="📈",                                     # Browser tab icon
     layout="wide",                                       # Use full screen width
     initial_sidebar_state="collapsed",                  # Hide sidebar on home page
@@ -367,7 +367,7 @@ st.markdown('<hr class="divider">', unsafe_allow_html=True)
 
 # ── WHY ARTHA ─────────────────────────────────────────────────────────────────
 st.markdown("""
-<div class="section-sub">Why Artha Terminal</div>
+<div class="section-sub">Why Nivesh Terminal</div>
 <div class="section-title">Built Different. On Purpose.</div>
 <br>
 """, unsafe_allow_html=True)
@@ -379,7 +379,7 @@ why_items = [
     ("📐", "SEBI-Aligned Risk Model",      "5-stage profiling grounded in SEBI IAR 2013 and AMFI demographics — not a generic risk slider."),
     ("🇮🇳", "India-First Design",           "All US prices in ₹ via live USD/INR. Zerodha, Groww, INDmoney, Vested context throughout."),
     ("📊", "Two-Dataframe Architecture",   "Daily data for short-term precision. Weekly data for 20Y depth. The same separation used in production fintech."),
-    ("🔓", "Free & Open",                  "No paywalls. No ads. No data selling. Artha Terminal is a public good for every Indian investor."),
+    ("🔓", "Free & Open",                  "No paywalls. No ads. No data selling. Nivesh Terminal is a public good for every Indian investor."),
 ]
 w1, w2 = st.columns(2)
 for col, items in [(w1, why_items[:3]), (w2, why_items[3:])]:
@@ -420,16 +420,16 @@ with c3:
 # ── FOOTER ────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="footer">
-  <div class="footer-name">Artha Terminal</div>
+  <div class="footer-name">Nivesh Terminal</div>
   <div class="footer-desc">Built by Eshan Mandloi · Financial Intelligence Platform for Indian Investors</div>
   <div class="footer-links">
     <a class="footer-link" href="https://www.linkedin.com/in/eshan-mandloi" target="_blank">LinkedIn</a>
-    <a class="footer-link" href="https://github.com/eshan2018/Artha-Terminal" target="_blank">GitHub</a>
+    <a class="footer-link" href="https://github.com/eshan2018/Nivesh-Terminal" target="_blank">GitHub</a>
     <a class="footer-link" href="/1_india_market">Indian Market</a>
     <a class="footer-link" href="/2_us_market">US Market</a>
   </div>
   <div class="footer-disclaimer">
-    ⚠️ Artha Terminal is for educational and informational purposes only.
+    ⚠️ Nivesh Terminal is for educational and informational purposes only.
     Nothing on this platform constitutes financial advice. Past performance does not guarantee future results.
     Please consult a SEBI-registered investment adviser before making investment decisions.
     All signals are quantitative heuristics — not backtested recommendations.

@@ -1,4 +1,4 @@
-"""Central design system for Artha Terminal. Call inject_theme() at top of every page.
+"""Central design system for Nivesh Terminal. Call inject_theme() at top of every page.
 
 This file defines:
 1. PLOTLY_THEME — shared dark theme dict applied to every Plotly chart
@@ -573,7 +573,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
 .divider {{ border: none; border-top: 1px solid var(--border); margin: 52px 0; }}
 
 /* ══════════════════════════════════════════════════════════════════════════
-   WHY CARDS — horizontal icon + text cards in the "Why Artha" section.
+   WHY CARDS — horizontal icon + text cards in the "Why Nivesh" section.
    ══════════════════════════════════════════════════════════════════════════ */
 .why-card {{
     background: var(--bg-surface);

@@ -1,4 +1,4 @@
-# Artha Terminal 🇮🇳📊
+# Nivesh Terminal 🇮🇳📊
 
 **A full-stack financial intelligence dashboard for Indian and US markets** — built with Python, Streamlit, and real-time market data APIs.
 
@@ -10,7 +10,7 @@
 
 ## What it does
 
-Artha Terminal tracks **220 assets** across Indian (Nifty 100 + NSE ETFs) and US markets, providing a 20-year historical view with institutional-grade analytics:
+Nivesh Terminal tracks **220 assets** across Indian (Nifty 100 + NSE ETFs) and US markets, providing a 20-year historical view with institutional-grade analytics:
 
 | Feature | Details |
 |---------|---------|
@@ -81,8 +81,8 @@ Artha Terminal tracks **220 assets** across Indian (Nifty 100 + NSE ETFs) and US
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/eshan2018/Artha-Terminal.git
-cd Artha-Terminal
+git clone https://github.com/eshan2018/Nivesh-Terminal.git
+cd Nivesh-Terminal
 
 # 2. Create a virtual environment (recommended)
 python3.12 -m venv venv
@@ -140,7 +140,7 @@ Both free tiers are sufficient for single-user development.
 ## Project structure
 
 ```
-artha-terminal/
+nivesh-terminal/
 ├── home.py                    # Landing page with live market pulse
 ├── pages/
 │   ├── 1_india_market.py      # India dashboard (Nifty 100 + ETFs)
@@ -209,7 +209,7 @@ Once the app launches (`http://localhost:8501`):
 
 ## Disclaimer
 
-> Artha Terminal is an educational tool. All signals are quantitative and do not constitute investment advice. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor before making financial decisions.
+> Nivesh Terminal is an educational tool. All signals are quantitative and do not constitute investment advice. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor before making financial decisions.
 
 ---
 
