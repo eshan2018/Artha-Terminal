@@ -677,6 +677,26 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
 }}
 
 /* ══════════════════════════════════════════════════════════════════════════
+   PRIMARY BUTTONS — the amber "Enter Market" CTAs. Amber is a light accent,
+   so white label text is low-contrast; force near-black label + bold weight.
+   ══════════════════════════════════════════════════════════════════════════ */
+.stButton > button[kind="primary"],
+[data-testid="stBaseButton-primary"] {{
+    color: #0a0f1a !important;            /* Near-black text on amber */
+    font-weight: 700 !important;
+}}
+.stButton > button[kind="primary"] *,
+[data-testid="stBaseButton-primary"] * {{
+    color: #0a0f1a !important;            /* Cover inner span/markdown */
+}}
+.stButton > button[kind="primary"]:hover,
+.stButton > button[kind="primary"]:active,
+.stButton > button[kind="primary"]:focus,
+[data-testid="stBaseButton-primary"]:hover {{
+    color: #0a0f1a !important;            /* Keep black across all states */
+}}
+
+/* ══════════════════════════════════════════════════════════════════════════
    ACCESSIBILITY — keyboard focus states for buttons, inputs, tabs.
    Ensures keyboard-only users see where focus is. WCAG 2.1 requirement.
    ══════════════════════════════════════════════════════════════════════════ */
