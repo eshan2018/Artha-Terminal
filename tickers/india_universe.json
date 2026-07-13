@@ -240,11 +240,11 @@
     "tier": "Nifty 100"
   },
   {
-    "ticker": "LTIM.NS",
-    "name": "LTIMindtree",
-    "category": "High Growth",
+    "ticker": "LICI.NS",
+    "name": "Life Insurance Corp",
+    "category": "Stabilizer",
     "type": "equity",
-    "sector": "IT Services",
+    "sector": "Insurance",
     "tier": "Nifty 100"
   },
   {
@@ -312,7 +312,7 @@
     "tier": "Nifty 100"
   },
   {
-    "ticker": "ZOMATO.NS",
+    "ticker": "ETERNAL.NS",
     "name": "Eternal (Zomato)",
     "category": "High Growth",
     "type": "equity",
@@ -696,8 +696,8 @@
     "tier": "Nifty 100"
   },
   {
-    "ticker": "TATAMOTORS.NS",
-    "name": "Tata Motors",
+    "ticker": "TMPV.NS",
+    "name": "Tata Motors (PV)",
     "category": "High Growth",
     "type": "equity",
     "sector": "Automobiles",

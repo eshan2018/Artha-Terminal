@@ -48,6 +48,7 @@ def get_live_pulse():
         ("^BSESN",     "Sensex",         "india"),
         ("^NSEBANK",   "Bank Nifty",     "india"),
         ("^CNXIT",     "Nifty IT",       "india"),
+        ("^CNXPHARMA", "Nifty Pharma",   "india"),
         ("^CNXMIDCAP", "Nifty Midcap",   "india"),
         ("^CNXSC",     "Nifty Smallcap", "india"),
         # US indices
@@ -168,6 +169,7 @@ india_rows = (
     _card_row("Sensex",         "^BSESN") +
     _card_row("Bank Nifty",     "^NSEBANK") +
     _card_row("Nifty IT",       "^CNXIT") +
+    _card_row("Nifty Pharma",   "^CNXPHARMA") +
     _card_row("Nifty Midcap",   "^CNXMIDCAP") +
     _card_row("Nifty Smallcap", "^CNXSC")
 )
