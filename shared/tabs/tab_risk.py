@@ -44,7 +44,7 @@ def render(*, filtered, metrics, df_daily, df_weekly, market, usd_inr, profile, 
     sml_slope = (_med_ret - rfr * 100) / _med_vol if _med_vol > 0 else 0.5
     sml_y = rfr * 100 + sml_slope * x_range  # SML line: y = rfr + slope × x
     fig_rv.add_trace(go.Scatter(x=x_range, y=sml_y, name="Security Market Line",
-                                line=dict(color="rgba(0,212,255,0.35)", width=1.5, dash="dash"),
+                                line=dict(color="rgba(255,179,0,0.35)", width=1.5, dash="dash"),
                                 hoverinfo="skip"))
 
     # ── Median crosshairs (divide the plot into 4 quadrants) ──────────────

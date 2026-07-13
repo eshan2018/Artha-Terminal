@@ -15,10 +15,10 @@ The CSS covers:
 """
 import streamlit as st  # Streamlit UI framework
 
-# Google Fonts URL — loads 4 font families used throughout the app:
-# Playfair Display (serif, for titles), DM Sans (body text),
-# JetBrains Mono (monospace, for numbers/code), Inter (UI labels)
-_FONTS = "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+# Google Fonts URL — loads 3 font families used throughout the app:
+# DM Sans (body text), JetBrains Mono (monospace, for numbers/code),
+# Inter (UI labels + titles)
+_FONTS = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap"
 
 # Shared Plotly theme — applied to every chart via fig.update_layout(**PLOTLY_THEME)
 PLOTLY_THEME = {
@@ -42,7 +42,7 @@ def inject_theme(hide_sidebar: bool = False) -> None:
 
     st.markdown(f"""
 <style>
-/* Import Google Fonts (Playfair Display, DM Sans, JetBrains Mono, Inter) */
+/* Import Google Fonts (DM Sans, JetBrains Mono, Inter) */
 @import url('{_FONTS}');
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -55,12 +55,12 @@ def inject_theme(hide_sidebar: bool = False) -> None:
   --bg-surface:     #0d1526;              /* Card / panel background */
   --bg-elevated:    #111d33;              /* Hover / raised surface */
   --border:         #1e2d45;              /* Default border color */
-  --border-active:  #00d4ff;              /* Active / focused border (cyan) */
+  --border-active:  #ffb300;              /* Active / focused border (amber) */
   --text-primary:   #f0f6ff;             /* Main text color (near-white) */
   --text-secondary: #8da4c4;             /* Secondary text (muted blue-grey) */
   --text-muted:     #4a6080;             /* Least prominent text */
-  --accent:         #00d4ff;              /* Primary accent color (cyan) */
-  --accent-dim:     rgba(0,212,255,0.12); /* Faint accent background */
+  --accent:         #ffb300;              /* Primary accent color (amber) */
+  --accent-dim:     rgba(255,179,0,0.12); /* Faint accent background */
   --green:          #00e676;              /* Positive / gain color */
   --green-dim:      rgba(0,230,118,0.12); /* Faint green background */
   --red:            #f44336;              /* Negative / loss color */
@@ -108,7 +108,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
    TYPOGRAPHY HELPERS — reusable CSS classes for text styling.
    ══════════════════════════════════════════════════════════════════════════ */
 .t-display {{
-    font-family: 'Playfair Display', serif;  /* Elegant serif for hero titles */
+    font-family: 'Inter', sans-serif;        /* Bold sans-serif for hero titles */
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1.1;
@@ -173,7 +173,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
 .card:hover {{
     border-color: var(--border-active);               /* Cyan border on hover */
     background: var(--bg-elevated);                    /* Slightly lighter bg */
-    box-shadow: 0 8px 32px rgba(0,212,255,0.07);     /* Subtle glow */
+    box-shadow: 0 8px 32px rgba(255,179,0,0.07);     /* Subtle glow */
 }}
 .card-accent {{ border-top: 2px solid var(--accent); }}  /* Accent-topped cards */
 .card-gold   {{ border-top: 2px solid var(--gold); }}
@@ -451,7 +451,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
 .hero-badge {{
     display: inline-block;
     background: var(--accent-dim);
-    border: 1px solid rgba(0,212,255,0.3);
+    border: 1px solid rgba(255,179,0,0.3);
     color: var(--accent);
     font-size: 0.7rem;
     font-weight: 700;
@@ -462,14 +462,14 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
     margin-bottom: 24px;
 }}
 .hero-title {{
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', sans-serif;
     font-size: 4.2rem;
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1.08;
     margin-bottom: 18px;
 }}
-.hero-title span {{ color: var(--accent); }}  /* "TERMINAL" in cyan */
+.hero-title span {{ color: var(--accent); }}  /* "TERMINAL" in amber */
 .hero-tagline {{
     font-size: 1.12rem;
     color: var(--text-secondary);
@@ -516,10 +516,10 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
     border-color: var(--accent);
     background: var(--bg-elevated);
     transform: translateY(-4px);       /* Lift up on hover */
-    box-shadow: 0 20px 44px rgba(0,212,255,0.09);  /* Cyan glow */
+    box-shadow: 0 20px 44px rgba(255,179,0,0.09);  /* Amber glow */
 }}
 .market-card-flag  {{ font-size: 3.2rem; margin-bottom: 14px; }}
-.market-card-title {{ font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }}
+.market-card-title {{ font-family: 'Inter', sans-serif; font-size: 1.55rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }}
 .market-card-sub   {{ color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; margin-bottom: 18px; }}
 .market-card-desc  {{ color: var(--text-secondary); font-size: 0.86rem; line-height: 1.6; margin-bottom: 20px; }}
 .market-card-stats {{ display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }}
@@ -568,7 +568,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
 /* ══════════════════════════════════════════════════════════════════════════
    SECTION CHROME — centered section headers and horizontal dividers.
    ══════════════════════════════════════════════════════════════════════════ */
-.section-title {{ font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 6px; }}
+.section-title {{ font-family: 'Inter', sans-serif; font-size: 1.9rem; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 6px; }}
 .section-sub   {{ color: var(--text-muted); font-size: 0.72rem; text-align: center; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; margin-bottom: 32px; }}
 .divider {{ border: none; border-top: 1px solid var(--border); margin: 52px 0; }}
 
@@ -596,7 +596,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
    STEPS — numbered onboarding cards (01, 02, 03, 04).
    ══════════════════════════════════════════════════════════════════════════ */
 .step-card  {{ text-align: center; padding: 18px; }}
-.step-num   {{ font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 700; color: rgba(0,212,255,0.28); margin-bottom: 10px; }}  /* Faint cyan number */
+.step-num   {{ font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 700; color: rgba(255,179,0,0.28); margin-bottom: 10px; }}  /* Faint amber number */
 .step-title {{ font-weight: 700; color: var(--text-primary); margin-bottom: 6px; font-size: 0.9rem; }}
 .step-desc  {{ color: var(--text-muted); font-size: 0.8rem; line-height: 1.6; }}
 
@@ -610,7 +610,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp {{
     text-align: center;
     margin-top: 48px;
 }}
-.footer-name {{ font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--accent); margin-bottom: 7px; }}
+.footer-name {{ font-family: 'Inter', sans-serif; font-size: 1.35rem; color: var(--accent); margin-bottom: 7px; }}
 .footer-desc {{ color: var(--text-muted); font-size: 0.8rem; margin-bottom: 18px; }}
 .footer-links {{ display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; margin-bottom: 18px; }}
 .footer-link {{ color: var(--text-muted); font-size: 0.76rem; text-decoration: none; transition: color 0.15s; }}
