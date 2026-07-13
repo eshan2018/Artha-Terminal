@@ -49,8 +49,8 @@ def get_live_pulse():
         ("^NSEBANK",   "Bank Nifty",     "india"),
         ("^CNXIT",     "Nifty IT",       "india"),
         ("^CNXPHARMA", "Nifty Pharma",   "india"),
-        ("^CNXMIDCAP", "Nifty Midcap",   "india"),
-        ("^CNXSC",     "Nifty Smallcap", "india"),
+        ("^NSEMDCP50", "Nifty Midcap 50","india"),
+        ("^CNXAUTO",   "Nifty Auto",     "india"),
         # US indices
         ("^GSPC",    "S&P 500",      "us"),
         ("^IXIC",    "Nasdaq",       "us"),
@@ -169,9 +169,9 @@ india_rows = (
     _card_row("Sensex",         "^BSESN") +
     _card_row("Bank Nifty",     "^NSEBANK") +
     _card_row("Nifty IT",       "^CNXIT") +
-    _card_row("Nifty Pharma",   "^CNXPHARMA") +
-    _card_row("Nifty Midcap",   "^CNXMIDCAP") +
-    _card_row("Nifty Smallcap", "^CNXSC")
+    _card_row("Nifty Pharma",    "^CNXPHARMA") +
+    _card_row("Nifty Midcap 50", "^NSEMDCP50") +
+    _card_row("Nifty Auto",      "^CNXAUTO")
 )
 
 # Build the index rows HTML for the US card
