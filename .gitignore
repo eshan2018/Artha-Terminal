@@ -27,3 +27,11 @@ Thumbs.db
 venv/
 .venv/
 env/
+
+# Node / Next.js (Vercel migration — see MIGRATION.md)
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+.vercel/
+*.tsbuildinfo

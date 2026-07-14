@@ -1,0 +1,105 @@
+{
+  "generated_at": "15 Jul 2026, 00:36 IST",
+  "india": [
+    {
+      "ticker": "^NSEI",
+      "price": 24211.0,
+      "chg": 0.02,
+      "asof": "2026-07-13",
+      "label": "Nifty 50"
+    },
+    {
+      "ticker": "^BSESN",
+      "price": 77616.4,
+      "chg": 0.06,
+      "asof": "2026-07-13",
+      "label": "Sensex"
+    },
+    {
+      "ticker": "^NSEBANK",
+      "price": 58131.45,
+      "chg": 0.15,
+      "asof": "2026-07-13",
+      "label": "Bank Nifty"
+    },
+    {
+      "ticker": "^CNXIT",
+      "price": 29015.85,
+      "chg": 3.59,
+      "asof": "2026-07-13",
+      "label": "Nifty IT"
+    },
+    {
+      "ticker": "^CNXPHARMA",
+      "price": 25643.35,
+      "chg": -0.12,
+      "asof": "2026-07-13",
+      "label": "Nifty Pharma"
+    },
+    {
+      "ticker": "^NSEMDCP50",
+      "price": 18089.55,
+      "chg": 0.17,
+      "asof": "2026-07-13",
+      "label": "Nifty Midcap 50"
+    },
+    {
+      "ticker": "^CNXAUTO",
+      "price": 26860.75,
+      "chg": 0.69,
+      "asof": "2026-07-10",
+      "label": "Nifty Auto"
+    }
+  ],
+  "us": [
+    {
+      "ticker": "^GSPC",
+      "price": 7546.85,
+      "chg": 0.42,
+      "asof": "2026-07-14",
+      "label": "S&P 500"
+    },
+    {
+      "ticker": "^IXIC",
+      "price": 26126.64,
+      "chg": 0.98,
+      "asof": "2026-07-14",
+      "label": "Nasdaq"
+    },
+    {
+      "ticker": "^DJI",
+      "price": 52532.45,
+      "chg": 0.06,
+      "asof": "2026-07-14",
+      "label": "Dow Jones"
+    },
+    {
+      "ticker": "^RUT",
+      "price": 2963.68,
+      "chg": 0.36,
+      "asof": "2026-07-14",
+      "label": "Russell 2000"
+    },
+    {
+      "ticker": "^SP400",
+      "price": 3771.13,
+      "chg": 0.33,
+      "asof": "2026-07-14",
+      "label": "S&P MidCap 400"
+    },
+    {
+      "ticker": "^VIX",
+      "price": 16.42,
+      "chg": -4.31,
+      "asof": "2026-07-14",
+      "label": "VIX"
+    },
+    {
+      "ticker": "^FTSE",
+      "price": 10529.39,
+      "chg": 0.3,
+      "asof": "2026-07-14",
+      "label": "FTSE 100"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Dependencies for the snapshot batch job (scripts/generate_snapshots.py).
+# Kept separate from the app's requirements.txt so CI installs only what the
+# data pipeline needs.
+yfinance==0.2.66
+pandas==2.3.3

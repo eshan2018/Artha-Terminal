@@ -1,0 +1,50 @@
+name: Market data snapshots
+
+# Runs the batch job that produces the JSON the Next.js site reads.
+# NOTE: scheduled runs only fire from the DEFAULT branch, so the ~15-min cron
+# starts working once this is merged to main. Until then use "Run workflow".
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 min (matches the old 15-min cache TTL)
+  workflow_dispatch: {}        # manual trigger from the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - "scripts/generate_snapshots.py"
+      - "tickers/**"
+
+permissions:
+  contents: write              # allow committing refreshed snapshots
+
+concurrency:
+  group: snapshots
+  cancel-in-progress: false
+
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Generate snapshots
+        run: python scripts/generate_snapshots.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "nivesh-snapshots[bot]"
+          git config user.email "actions@github.com"
+          if [ -n "$(git status --porcelain web/public/data)" ]; then
+            git add web/public/data
+            git commit -m "data: refresh market snapshots [skip ci]"
+            git push
+          else
+            echo "No snapshot changes."
+          fi
