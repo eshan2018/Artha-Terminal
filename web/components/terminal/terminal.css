@@ -25,10 +25,14 @@
   position: relative;
 }
 
-/* CRT scanlines + vignette */
+/* CRT scanlines + vignette.
+   Both are full-viewport fixed overlays. Promote each to its own compositor
+   layer (translateZ + will-change) so scrolling doesn't repaint the whole
+   screen through these gradients — that was causing heavy/"sticky" scroll. */
 .term-root::before {
   content: "";
   position: fixed; inset: 0; pointer-events: none; z-index: 60;
+  transform: translateZ(0); will-change: transform;
   background: repeating-linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.025) 0px,
@@ -40,6 +44,7 @@
 .term-root::after {
   content: "";
   position: fixed; inset: 0; pointer-events: none; z-index: 61;
+  transform: translateZ(0); will-change: transform;
   background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.35));
 }
 
@@ -96,9 +101,10 @@
   position: sticky; top: 34px; z-index: 49;
   display: flex; align-items: center; gap: 8px;
   padding: 10px 16px;
-  background: rgba(6, 10, 18, 0.96);
+  /* Solid (near-opaque) background instead of backdrop-filter blur — the blur
+     forced a full repaint of everything scrolling under the sticky bar. */
+  background: #070c15;
   border-bottom: 1px solid var(--t-border);
-  backdrop-filter: blur(4px);
 }
 .cmdbar .prompt { color: var(--t-amber); text-shadow: 0 0 8px var(--t-amber-dim); }
 .cmdbar input {
