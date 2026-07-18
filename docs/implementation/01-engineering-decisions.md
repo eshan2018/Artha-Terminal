@@ -243,7 +243,8 @@ architectural change, that is a *new ADR*, and the ED is marked `Superseded`/`De
   schema rules are first-class; the checks run anywhere with no third-party install. Trade-off:
   we maintain ~150 lines of lint code (covered by its own tests).
 - **Configuration Source:** `tools/ci/architecture_map.py` (the rules); `tools/ci/*.py` (the
-  checks); `.github/workflows/ci.yml` + `Makefile` (invocation).
+  checks); `deploy/ci.workflow.yml` + `Makefile` (invocation — see that file's
+  activation note; it mirrors `deploy/snapshots.workflow.yml`).
 - **Related Architecture Documents:** [doc 03](../architecture/03-system-architecture.md), [doc 06](../architecture/06-provider-abstraction-layer.md), [ADR-0002](../architecture/18-architecture-decision-records.md#adr-0002--strictly-layered-architecture-with-an-enforced-dependency-direction)/[0003](../architecture/18-architecture-decision-records.md#adr-0003--modular-monolith-with-module-owned-schemas)/[0005](../architecture/18-architecture-decision-records.md#adr-0005--provider-abstraction-via-portsadapters), [doc 11](../architecture/11-testing-strategy.md).
 
 ### ED-009 · Linter/formatter

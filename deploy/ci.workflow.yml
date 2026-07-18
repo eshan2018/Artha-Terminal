@@ -1,8 +1,15 @@
 # Nivesh Terminal — backend CI (Phase 0 guardrails + tests).
 # Blocking gate: architecture guardrails, style lint, and the test suite.
-# NOTE: pushing files under .github/workflows/ requires a token with the `workflow`
-# scope. If the automation token lacks it, add this file via the GitHub UI (as done
-# for deploy/snapshots.workflow.yml). `make check` runs the identical gate locally.
+#
+# ACTIVATION (one manual step — same constraint as deploy/snapshots.workflow.yml):
+# this file lives here rather than under .github/workflows/ because pushing there
+# requires a token with the `workflow` scope, which the automation token lacks.
+# To turn CI on, either:
+#   - In GitHub: Add file -> Create new file at `.github/workflows/ci.yml`, paste
+#     these contents, commit; or
+#   - Grant the PAT the `workflow` scope, then
+#     `git mv deploy/ci.workflow.yml .github/workflows/ci.yml` and push.
+# Until then `make check` runs the identical gate locally.
 name: CI
 
 on:
