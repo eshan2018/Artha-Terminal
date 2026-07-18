@@ -12,6 +12,14 @@ dist/
 build/
 *.egg
 
+# Python tooling caches (backend, M1+)
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
 # OS
 .DS_Store
 Thumbs.db
