@@ -228,7 +228,7 @@ backend/                      the layered app (45 modules, 173 tests)
 
 tools/ci/                     the three architecture guardrails + tests
 tools/skeleton_status.py      live status board (`make skeleton`)
-deploy/ci.workflow.yml        CI — NOT YET ACTIVE (see §10)
+.github/workflows/ci.yml      CI — active: guardrails + ruff + pytest on every push/PR
 
 home.py, pages/, shared/, tickers/, web/    ← OLD PROTOTYPE, still live. Do not extend.
 ```
@@ -248,13 +248,9 @@ make skeleton    # live status board + real end-to-end trace
 
 ## 10 · Open items
 
-1. **CI is dormant.** `deploy/ci.workflow.yml` needs one manual step — add it via the GitHub UI
-   at `.github/workflows/ci.yml`, or grant the PAT `workflow` scope and `git mv` it. It lives in
-   `deploy/` because the token lacks `workflow` scope (same convention as
-   `deploy/snapshots.workflow.yml`, see `MIGRATION.md`). **Until then the guardrails only run
-   when someone runs `make check` locally.**
-2. **Tag name caveat** — `v0.1-walking-skeleton` marks L1–L5 only (see §1 warning).
-3. **One interpretation open to a second opinion** — L4 preserves native currency and does not
+1. **Tag name caveat** — `v0.1-walking-skeleton` marks L1–L5 only (see §1 warning).
+   `v0.2-compute-slice` names its increment rather than the whole, so it carries no such trap.
+2. **One interpretation open to a second opinion** — L4 preserves native currency and does not
    FX-convert (recorded in the plan's decision log). Changing it is a plan change, not an
    architecture change.
 
