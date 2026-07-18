@@ -119,8 +119,11 @@ _SAMPLE_BARS = (
 
 def trace(instrument: str, out) -> None:
     """Run the real pipeline for `instrument` and narrate each stage."""
+    from backend.analytics.one_year_return import one_year_return
     from backend.domain.market_data.sqlite_repository import SqliteMarketDataRepository
+    from backend.domain.model.analytics import ResultStatus
     from backend.domain.model.instruments import REFERENCE_VERSION, reference_for
+    from backend.features.returns import build_close_price_series
     from backend.ingestion.filesystem_object_store import FilesystemObjectStore
     from backend.ingestion.normalization import (
         normalize_price_history,
@@ -218,6 +221,48 @@ def trace(instrument: str, out) -> None:
             f"read back         {len(stored)} observations",
             f"quarantine kept   {len(repository.get_quarantined(instrument_id))} "
             "(rejected data is retained, not lost)",
+        ])
+        def close_of(observation) -> str:
+            """The exact decimal before the seam. Explicit rather than `or`-chained: a
+            zero amount is falsy, and money must never render as an empty string."""
+            value = observation.close
+            return str(value.amount if hasattr(value, "amount") else value.points)
+
+        # L6 — the feature, and the C3 seam in the open.
+        as_of = knowledge_time
+        series = build_close_price_series(repository, instrument_id, as_of=as_of)
+        seam = (
+            f"{close_of(stored[0])} → {series.points[0].price!r}"
+            if series.points
+            else "no points"
+        )
+        _stage(out, "L6", "Feature engineering (the C3 seam)", [
+            f"feature           {series.feature_version}",
+            f"points            {len(series.points)}  (as-of {as_of.date()}, "
+            "filtered on event_time AND knowledge_time)",
+            f"decimal → float   {seam}   (one-way; no inverse exists)",
+            f"parameters pinned {dict(series.lineage.parameters)}",
+            f"reference version {series.reference_version}",
+        ])
+
+        # L7 — the engine and its traced envelope.
+        result = one_year_return(series, computed_at=knowledge_time)
+        if result.status is ResultStatus.AVAILABLE:
+            assert result.value is not None
+            kind = type(result.value).__name__
+            verdict = f"value             {result.value.value:+.4%}   [{kind}]"
+        else:
+            # The sample spans days, not a year — so this demonstrates the guarantee
+            # that matters most: a missing input is absence with a reason, never zero.
+            verdict = f"UNAVAILABLE       {result.unavailable_reason}   (never zero — principle 13)"
+        _stage(out, "L7", "Analytics engine → AnalyticResult", [
+            f"metric            {result.metric_id}",
+            f"formula           {result.formula_version}",
+            verdict,
+            f"as_of             {result.as_of.isoformat()}",
+            f"quality flags     {', '.join(result.quality_flags) or 'none'}",
+            f"lineage           {len(result.lineage.features[0].inputs)} observation(s) → "
+            f"{len(result.lineage.raw_object_keys())} raw object(s)",
         ])
         repository.close()
 

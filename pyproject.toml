@@ -1,5 +1,5 @@
 # Nivesh Terminal — backend project configuration.
-# Realizes ED-001 (Python 3.12), ED-007 (pytest), ED-009 (ruff). See
+# Realizes ED-001 (Python 3.12), ED-007 (pytest), ED-009 (ruff), ED-010 (hypothesis). See
 # docs/implementation/01-engineering-decisions.md.
 
 [project]
@@ -11,6 +11,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
+    "hypothesis>=6,<7",
     "pytest>=8,<9",
     "pytest-cov>=5,<6",
     "ruff>=0.6,<0.7",
