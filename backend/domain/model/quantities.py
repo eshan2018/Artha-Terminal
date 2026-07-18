@@ -60,6 +60,27 @@ class Money:
 
 
 @dataclass(frozen=True, slots=True)
+class Ratio:
+    """A unitless statistical quantity — a return, a volatility, a Sharpe ratio.
+
+    Deliberately a `float`, and deliberately *not* money. ADR-0016 permits binary
+    floating point for statistical quantities precisely because they are not
+    monetary: a ratio has no currency to be exact in. The type exists so a bare
+    number never crosses a layer boundary (doc 04) and so that a ratio can never be
+    mistaken for — or converted back into — money, which C3 forbids.
+    """
+
+    value: float
+
+    def __post_init__(self) -> None:
+        if isinstance(self.value, bool) or not isinstance(self.value, float):
+            raise TypeError(
+                f"Ratio.value must be a float, got {type(self.value).__name__} "
+                "(ratios are statistical quantities, not money — ADR-0016)"
+            )
+
+
+@dataclass(frozen=True, slots=True)
 class IndexLevel:
     """An index level in unitless points. Deliberately carries no currency."""
 

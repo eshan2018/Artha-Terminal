@@ -17,18 +17,18 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 def test_built_layers_are_detected_by_probing_the_code() -> None:
     built = {layer.ident for layer in status.LAYERS if status.layer_is_built(layer)}
-    assert {"L1", "L2", "L3", "L4", "L5"} <= built
+    assert {"L1", "L2", "L3", "L4", "L5", "L6", "L7"} <= built
 
 
 def test_unbuilt_layers_are_reported_pending() -> None:
     built = {layer.ident for layer in status.LAYERS if status.layer_is_built(layer)}
-    assert not ({"L6", "L7", "L8", "L9", "L10"} & built)
+    assert not ({"L8", "L9", "L10"} & built)
 
 
 def test_completed_milestones_match_built_layers() -> None:
     complete = {m.ident for m in status.MILESTONES if status.milestone_is_complete(m, REPO_ROOT)}
-    assert {"M0", "M1", "M2", "M2b", "M2c", "M2d"} <= complete
-    assert not ({"M3", "M4", "M5"} & complete)
+    assert {"M0", "M1", "M2", "M2b", "M2c", "M2d", "M3"} <= complete
+    assert not ({"M4", "M5"} & complete)
 
 
 def test_status_board_renders_without_ansi_when_not_a_tty() -> None:
@@ -48,7 +48,8 @@ def test_trace_runs_the_real_pipeline(instrument: str) -> None:
 
     # Every stage reported, in order.
     for marker in ("Provider adapter", "Raw store", "Validation gate",
-                   "Normalization", "Domain store", "LINEAGE"):
+                   "Normalization", "Domain store", "Feature engineering",
+                   "Analytics engine", "LINEAGE"):
         assert marker in text, f"missing stage: {marker}"
 
     # The gate really rejected the deliberately invalid bar, and it was retained.
@@ -59,6 +60,20 @@ def test_trace_runs_the_real_pipeline(instrument: str) -> None:
     # Persistence really happened and re-running really was idempotent.
     assert "rows written      2" in text
     assert "re-running writes 0" in text
+
+
+def test_trace_exercises_the_compute_slice_and_refuses_to_fabricate() -> None:
+    """The sample spans days, not a year — so the trace must show the metric
+    declining with a reason rather than reporting zero."""
+    out = io.StringIO()
+    status.trace("reliance", out)
+    text = out.getvalue()
+
+    assert "close-price-series/v1" in text
+    assert "one-year-total-return/v1" in text
+    assert "one-way; no inverse exists" in text
+    assert "UNAVAILABLE" in text
+    assert "insufficient-history-for-a-one-year-window" in text
 
 
 def test_trace_shows_index_as_unitless_points() -> None:
@@ -77,7 +92,8 @@ def test_mermaid_marks_built_and_pending_layers() -> None:
     diagram = status.mermaid(REPO_ROOT)
     assert diagram.startswith("```mermaid")
     assert "L1 · Provider adapters\"]:::built" in diagram
-    assert "L6 · Feature engineering\"]:::pending" in diagram
+    assert "L6 · Feature engineering\"]:::built" in diagram
+    assert "L9 · REST API\"]:::pending" in diagram
 
 
 def test_cli_entrypoint_succeeds() -> None:

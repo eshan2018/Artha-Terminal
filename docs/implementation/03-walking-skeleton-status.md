@@ -28,9 +28,9 @@ flowchart TD
     L3 --> L4
     L5["L5 · Domain store"]:::built
     L4 --> L5
-    L6["L6 · Feature engineering"]:::pending
+    L6["L6 · Feature engineering"]:::built
     L5 --> L6
-    L7["L7 · Analytics engines"]:::pending
+    L7["L7 · Analytics engines"]:::built
     L6 --> L7
     L8["L8 · AI layer"]:::pending
     L7 --> L8
@@ -47,8 +47,8 @@ flowchart TD
 | L3 Validation gate | ✅ built | `validate_price_history` (fail-closed) | 05 |
 | L4 Normalization | ✅ built | `normalize_price_history` → `PriceObservation` | 04 / 05 |
 | L5 Domain store | ✅ built | `MarketDataRepository` + SQLite backend | 04 / 07 |
-| L6 Feature engineering | ⬜ pending | — | 08 |
-| L7 Analytics engines | ⬜ pending | — | 08 |
+| L6 Feature engineering | ✅ built | `build_close_price_series` → `ClosePriceSeries` (the C3 seam) | 08 |
+| L7 Analytics engines | ✅ built | `one_year_return` → `AnalyticResult` | 08 |
 | L8 AI layer | ⬜ pending | *(deferred to Phase 7)* | 09 |
 | L9 REST API | ⬜ pending | — | 10 |
 | L10 Frontend | ⬜ pending | existing Next.js app, not yet wired to an API | 10 |
@@ -75,12 +75,24 @@ InstrumentId("reliance")                        ← internal identity, never a v
   │        ├── knowledge_time populated on every row (C1)
   │        └── provenance pins raw object key + provider/contract/reference versions
   │
-  └─ L5  repository.save_observations(...)       idempotent; effective-dated by knowledge_time
-           └── corrections insert a new version; nothing is overwritten
+  ├─ L5  repository.save_observations(...)       idempotent; effective-dated by knowledge_time
+  │        └── corrections insert a new version; nothing is overwritten
+  │
+  ├─ L6  build_close_price_series(repo, id,      → ClosePriceSeries  [close-price-series/v1]
+  │                               as_of=…)
+  │        ├── THE C3 SEAM: the one decimal→float conversion, one-way (no inverse)
+  │        ├── as-of filter on BOTH event_time and knowledge_time ⇒ lookahead-free
+  │        └── carries a FeatureRef naming every observation consumed
+  │
+  └─ L7  one_year_return(series,                 → AnalyticResult    [one-year-total-return/v1]
+                         computed_at=…)
+           ├── pure: no I/O, no clock, no randomness; features only, never repositories
+           ├── (P_end / P_start) − 1 as a unitless Ratio; anchor within ±7 days of −365d
+           └── missing/undefined input ⇒ Unavailable(reason), never zero
 ```
 
-Everything above L5 (features → analytics → API → frontend) is **not yet connected**; the
-existing Next.js site still reads its snapshot JSON, exactly as the strangler plan intends.
+Everything above L7 (API → frontend) is **not yet connected**; the existing Next.js site still
+reads its snapshot JSON, exactly as the strangler plan intends.
 
 ## 3 · Milestones
 
@@ -92,14 +104,16 @@ existing Next.js site still reads its snapshot JSON, exactly as the strangler pl
 | M2b | Raw store (L2) | ✅ complete |
 | M2c | Gate + normalization (L3–L4) | ✅ complete |
 | M2d | Domain store (L5) | ✅ complete |
-| M3 | Compute slice — feature + engine (L6–L7) | ⬜ remaining |
+| M3 | Compute slice — feature + engine (L6–L7) | ✅ complete |
 | M4 | Serve slice — API + frontend (L9–L10) | ⬜ remaining |
 | M5 | DAG + recompute-from-raw timing | ⬜ remaining |
 
 ## 4 · A real example, end to end
 
 Run `make skeleton` for the live version. Abridged output for **RELIANCE**, where the sample
-deliberately includes one invalid bar so the gate's behaviour is visible:
+deliberately includes one invalid bar so the gate's behaviour is visible — and spans days rather
+than a year, so L7 demonstrates the guarantee that matters most: **absence with a reason, never a
+fabricated zero**:
 
 ```
 L1  Provider adapter
@@ -128,6 +142,18 @@ L5  Domain store (repository)
       re-running writes 0   (idempotent — effective-dated by knowledge_time)
       quarantine kept   1   (rejected data is retained, not lost)
 
+L6  Feature engineering (the C3 seam)
+      feature           close-price-series/v1
+      points            2  (as-of …, filtered on event_time AND knowledge_time)
+      decimal → float   1410.5 → 1410.5   (one-way; no inverse exists)
+      parameters pinned {'interval': '1d'}
+
+L7  Analytics engine → AnalyticResult
+      metric            one_year_return
+      formula           one-year-total-return/v1
+      UNAVAILABLE       insufficient-history-for-a-one-year-window   (never zero — principle 13)
+      lineage           2 observation(s) → 1 raw object(s)
+
 LINEAGE — a stored fact traced back to its source
   Money 2025-07-01
     ← raw object   raw/v1/yfinance/price-history/…/reliance/23fcf03b….json
@@ -142,3 +168,4 @@ making FX conversion type-impossible.
 | Date | Change |
 |------|--------|
 | 2026-07-17 | Created after M2d. Layers L1–L5 built; L6–L10 pending. |
+| 2026-07-18 | Regenerated after M3. L6 (close-price-series feature, the C3 seam) and L7 (`one_year_return` → `AnalyticResult`) built; L8–L10 pending. |

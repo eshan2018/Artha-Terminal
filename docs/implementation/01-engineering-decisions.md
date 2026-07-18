@@ -56,7 +56,7 @@ architectural change, that is a *new ADR*, and the ED is marked `Superseded`/`De
 3. **The Configuration Source is authoritative for reproducibility.** The prose here explains
    *why*; the config file is the *what* that CI/deploys actually consume.
 4. **No duplication with ADRs.** An ED cites the ADR it realizes; it does not re-decide it.
-5. **IDs are permanent and never reused;** next id is **ED-010**.
+5. **IDs are permanent and never reused;** next id is **ED-011**.
 
 ---
 
@@ -72,6 +72,7 @@ architectural change, that is a *new ADR*, and the ED is marked `Superseded`/`De
 | [ED-007](#ed-007--test-framework) | Test framework — pytest | Accepted | doc 11 |
 | [ED-008](#ed-008--architecture-guardrail-implementation) | Architecture guardrail lints — custom AST checks | Accepted | doc 03/06, ADR-0002/0003/0005 |
 | [ED-009](#ed-009--linterformatter) | Linter/formatter — ruff | Accepted | doc 11 |
+| [ED-010](#ed-010--property-based-testing-library) | Property-based testing — hypothesis (dev-only) | Accepted | doc 11 (B10) |
 
 ---
 
@@ -258,6 +259,28 @@ architectural change, that is a *new ADR*, and the ED is marked `Superseded`/`De
 - **Configuration Source:** `pyproject.toml` (`[tool.ruff]`, `[tool.ruff.lint]`).
 - **Related Architecture Documents:** [doc 11](../architecture/11-testing-strategy.md).
 
+### ED-010 · Property-based testing library
+- **Status:** Accepted
+- **Context:** [Doc 11](../architecture/11-testing-strategy.md) (hardened per review B10) makes property-based tests a **mandatory**
+  tier for financial correctness — "the bugs no one thought to hand-compute" — alongside
+  reference values and an independent reference implementation. M3 is the first milestone with
+  financial math to test, so the mechanism is needed now. Doc 11 also requires the suite to stay
+  hermetic with fixed seeds, which a randomized generator threatens by default.
+- **Decision:** **hypothesis**, pinned in `pyproject.toml` under `[project.optional-dependencies] dev`,
+  run under a `hermetic` profile (`derandomize=True`, `deadline=None`) registered in
+  `backend/tests/conftest.py`.
+- **Alternatives Considered:** *hand-rolled generators over `random.Random(seed)`* — zero new
+  dependencies, but reimplements shrinking badly, and a minimal counterexample is most of what
+  makes a failing property test actionable; *skip the tier* — rejected, doc 11 mandates it.
+- **Consequences:** **Runtime dependencies remain zero** — this is dev-only, so nothing ships.
+  `derandomize` makes a given commit always explore the same inputs, so failures are reproducible
+  and green runs repeatable; `deadline=None` removes a wall-clock dependence masquerading as a
+  correctness check. Reversal cost is low: the properties are plain assertions over generated
+  lists and would survive a change of generator.
+- **Configuration Source:** `pyproject.toml` (`[project.optional-dependencies] dev`);
+  `backend/tests/conftest.py` (the hermetic profile).
+- **Related Architecture Documents:** [doc 11](../architecture/11-testing-strategy.md); complements [ED-007](#ed-007--test-framework) (pytest).
+
 ---
 
 ## Change log
@@ -266,4 +289,5 @@ architectural change, that is a *new ADR*, and the ED is marked `Superseded`/`De
 | 2026-07-17 | Log created; ED-001…ED-006 recorded — the technology selections that realize Architecture v2.0, classified as implementation decisions (not ADRs) per the doc-18 threshold rule. | The six selections change no architectural boundary/contract/deployment-model; the architectural decisions they realize are already owned by ADR-0008/0009/0012/0014/0016 and docs 12/16. Keeps the ADR registry concise. |
 | 2026-07-17 | **ED-007…ED-009 recorded** during Milestone M1 (test framework = pytest; guardrail lints = custom AST checks; linter/formatter = ruff). | M1 introduces and uses these tools; they are implementation/tooling details below the ADR threshold. |
 | 2026-07-17 | **ED-003 revised** (Proposed → Accepted): interface is a `MarketDataRepository` port; dev/CI backend is stdlib SQLite; production remains managed PostgreSQL; one schema shape across both. | Same environment reasoning as ED-004: ADR-0008 fixes the **deployed** system of record; the local backend is ED-tier. SQLite is stdlib, so it adds zero dependencies and no Docker while still exercising real DDL, schema, exact-decimal round-trip and durability. Accepted cost recorded: SQL dialect differences and Postgres-specific behaviour unproven until deploy. |
-| 2026-07-17 | **ED-004 revised** (Proposed → Accepted): interface is a provider-neutral `RawStore` port; dev/CI backend is a first-class `FilesystemObjectStore`; production remains S3-compatible object storage; key layout is backend-independent and S3-mapping. | Governance review determined object storage is architectural **for the deployed platform** (ADR-0009, unchanged), while the per-environment backend is ED-tier (doc 12 distinct environments). Applies the minimalism principle: no Docker/MinIO/boto3 until first deploy. Accepted cost recorded: S3 path unexercised until deploy; skeleton RTO is a local baseline. Next id: ED-010. |
+| 2026-07-17 | **ED-004 revised** (Proposed → Accepted): interface is a provider-neutral `RawStore` port; dev/CI backend is a first-class `FilesystemObjectStore`; production remains S3-compatible object storage; key layout is backend-independent and S3-mapping. | Governance review determined object storage is architectural **for the deployed platform** (ADR-0009, unchanged), while the per-environment backend is ED-tier (doc 12 distinct environments). Applies the minimalism principle: no Docker/MinIO/boto3 until first deploy. Accepted cost recorded: S3 path unexercised until deploy; skeleton RTO is a local baseline. |
+| 2026-07-18 | **ED-010 recorded** during Milestone M3: hypothesis as the property-based testing library, dev-only, under a derandomized hermetic profile. | M3 is the first milestone with financial math, and doc 11 makes the property tier mandatory for it. Dev-only, so the zero-runtime-dependency position is unchanged. Next id: ED-011. |

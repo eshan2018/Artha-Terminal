@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-01-01T00:00:00+00:00",
+  "computed_at": "2026-01-01T06:30:00+00:00",
+  "feature_id": "close_price_series",
+  "feature_version": "close-price-series/v1",
+  "formula_version": "one-year-total-return/v1",
+  "input_count": 400,
+  "instrument_id": "reliance",
+  "metric_id": "one_year_return",
+  "quality_flags": [],
+  "raw_object_keys": [
+    "raw/v1/yfinance/price-history/2025-01/reliance/golden.json"
+  ],
+  "reference_version": "skeleton-reference/v1",
+  "status": "AVAILABLE",
+  "value": "0.00545785324439052"
+}
