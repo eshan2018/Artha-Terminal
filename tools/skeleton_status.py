@@ -341,9 +341,16 @@ def status_board(out, repo_root: Path) -> None:
 
     built = sum(1 for layer in LAYERS if layer_is_built(layer, repo_root))
     complete = sum(1 for m in MILESTONES if milestone_is_complete(m, repo_root))
+    # Phrased so the ratio cannot be read as "the project is finished". Phase 0.5 is
+    # one phase of doc 15's roadmap; L8 (AI) is Phase 7 and never in skeleton scope.
+    scope = (
+        "Phase 0.5 (Walking Skeleton) COMPLETE"
+        if complete == len(MILESTONES)
+        else "Phase 0.5 (Walking Skeleton) in progress"
+    )
     print(
         f"\n  {built}/{len(LAYERS)} layers built · "
-        f"{complete}/{len(MILESTONES)} milestones complete",
+        f"{complete}/{len(MILESTONES)} Phase 0.5 milestones · {scope}",
         file=out,
     )
 

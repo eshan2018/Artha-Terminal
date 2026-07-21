@@ -5,15 +5,50 @@ Last updated: 2026-07-22 · `main` @ `60adb08`
 
 ---
 
+## 0 · Freeze notice — Phase 0.5 is closed
+
+**Phase 0.5 (Walking Skeleton) is COMPLETE and FROZEN as of 2026-07-22, tag
+`v0.3-walking-skeleton-complete`.**
+
+What "frozen" means here, precisely:
+
+- **The skeleton's scope is closed.** 5 instruments · 1 provider · 1 metric · 1 endpoint.
+  That fence held through nine milestones and does not reopen. Breadth is Phase 1+ (doc 15).
+- **The tagged commit is the reference state.** Anyone can check it out, run `make check`
+  and `make recompute`, and reproduce every claim in this document.
+- **Architecture v2.0 remains frozen and authoritative.** This was always true (§3, §6) and
+  is restated here because the next phase is where the pressure to bend it appears: Phase 1
+  re-hardens the domain model, and "we already have the code" is not an argument that
+  outranks the blueprint.
+
+**Any architectural change requires an ADR** — a change to a layer boundary, a published
+contract, the dependency direction, the deployment model, or anything that would need a
+migration to reverse. Next id: **ADR-0021, still unused.** Nine milestones were delivered
+without spending one; that is evidence the architecture was sufficient, and the bar for the
+first one should stay high.
+
+**Implementation choices remain Engineering Decisions** (next id: **ED-016**) and do not
+need an ADR. The distinction and its litmus are in
+[doc 01](implementation/01-engineering-decisions.md); when in doubt, classify before writing
+code, not after.
+
+> One caution for whoever picks this up: the skeleton contains deliberate, documented debt —
+> a provisional domain model, a disposable endpoint ([ADR-0020](architecture/18-architecture-decision-records.md#adr-0020--walking-skeleton-first-strangle-the-prototype)), vendor-inherited price
+> adjustment, an O(n) lineage lookup, and an RTO measured on a laptop. None of it is a
+> surprise; all of it is recorded in §10 and in the implementation docs. Phase 1 should read
+> that list before adding anything new.
+
 ## 1 · Current progress
 
 ```
-Current milestone      M5 COMPLETE — **Phase 0.5 Definition of Done met**
+Phase                  **Phase 0.5 (Walking Skeleton) COMPLETE — FROZEN**
+Last milestone         M5 (DAG + recompute RTO) — Phase 0.5 DoD met in full
 Next milestone         Phase 1 (see doc 15) — not started, not planned
 Current branch         main
 Latest merge           M5 DAG + recompute-from-raw RTO
-Checkpoint tags        v0.1-walking-skeleton → bcd020f  (L1–L5, ingest half)
-                       v0.2-compute-slice    → 4c0e5d5  (L6–L7, compute half)
+Checkpoint tags        v0.1-walking-skeleton        (L1–L5, ingest half)
+                       v0.2-compute-slice           (L6–L7, compute half)
+                       v0.3-walking-skeleton-complete (Phase 0.5 closed)
 Tests                  246 passing
 Runtime dependencies   1 direct · 9 transitive  (see §5 — "0 dependencies" ended
                        at M4a; L1–L7 remain stdlib-only)
@@ -45,8 +80,13 @@ CI                     ACTIVE — guardrails + ruff + pytest on every push/PR
    throwaway endpoint on it; it is neither started nor planned.
 ```
 
-> ✅ **The Walking Skeleton is complete — 9/10 layers, 9/9 milestones.** L8 (AI) is Phase 7 and
-> was never in skeleton scope, so 9/10 is the finished state, not a shortfall.
+> ✅ **Phase 0.5 (Walking Skeleton) is COMPLETE** — all 9 of its milestones, 9 of 10 layers.
+> L8 (AI) is Phase 7 and was never in skeleton scope, so 9/10 is the finished state for this
+> phase, not a shortfall.
+>
+> **This is one phase of doc 15's roadmap, not the project.** Phases 1–8 — model hardening,
+> breadth, invalidation, entitlements, multi-provider, backtesting, AI, commercialization —
+> are all ahead. "Complete" here means the skeleton's scope is met.
 >
 > **Every item of Phase 0.5's Definition of Done (plan §B8) is met:** every layer exists and is
 > exercised; lineage resolves end-to-end; the recompute-from-raw number exists (~0.011 s,

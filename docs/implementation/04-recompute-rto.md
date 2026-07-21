@@ -6,7 +6,7 @@
 | **Owner** | Implementing engineer |
 | **Governed by** | Architecture v2.0 — [doc 12 Deployment](../architecture/12-deployment-strategy.md) (RPO/RTO), [ADR-0017](../architecture/18-architecture-decision-records.md#adr-0017--first-class-lineage-with-three-guarantee-tiers) (lineage tiers), [doc 16](../architecture/16-data-orchestration-and-freshness.md) |
 | **Implements** | [Walking Skeleton Plan §B6](00-walking-skeleton-plan.md) — the final Phase 0.5 Definition-of-Done item |
-| **Regenerate** | `make recompute` (or `python -m tools.recompute_rto --json`) |
+| **Regenerate** | `make recompute` · `python -m tools.recompute_rto --samples 20 --json` |
 
 ## Purpose
 
@@ -60,49 +60,81 @@ snapshot, and the output reproduces exactly.
 
 ## The measurement
 
-Recorded 2026-07-22, M5.
+Recorded 2026-07-22 (M5). Reproduce with `make recompute` — or
+`python -m tools.recompute_rto --samples 20 --json` for the raw figures below.
+
+### Dataset
+
+| | |
+|---|---|
+| Instrument | `reliance` (1 of the 5 skeleton instruments) |
+| Bars ingested | 500 daily bars (~2 calendar years) |
+| Observations rebuilt | 500 |
+| Raw objects replayed | 1 |
+| Raw bytes read | 55,702 |
+| Metric | `one-year-total-return/v1` → `0.06121134020618557` |
+
+### Environment
+
+| | |
+|---|---|
+| Python | 3.12.4 (CPython) |
+| OS | Darwin 25.5.0 |
+| Machine | arm64 · arm · 8 logical CPUs |
+| Raw store | FilesystemObjectStore (local disk) |
+| Domain store | SQLite (stdlib, single connection) |
+| Concurrency | single process, single thread |
+
+### Results — 20 independent cold rebuilds
+
+Each sample runs in its own temporary workspace, so no run benefits from another's warm
+caches or a populated store. Every sample is a full rebuild from raw.
+
+| Statistic | Value |
+|---|---|
+| **Mean** | **0.0113 s** |
+| Min | 0.0108 s |
+| Max | 0.0130 s |
+| Standard deviation | 0.0006 s |
+| Samples | 20 |
+| Reproduction | **byte-identical in all 20 samples** |
+
+<details>
+<summary>All 20 timings (seconds)</summary>
 
 ```
-instrument            reliance
-bars ingested         500
-raw objects replayed  1
-observations rebuilt  500
-reproduction          BYTE-IDENTICAL
+0.0109 · 0.0110 · 0.0109 · 0.0113 · 0.0122 · 0.0110 · 0.0111 · 0.0113 · 0.0114 · 0.0111 · 0.0127 · 0.0108 · 0.0114 · 0.0110 · 0.0114 · 0.0109 · 0.0130 · 0.0112 · 0.0113 · 0.0110
 ```
+</details>
 
-| Run | Recompute time |
-|-----|----------------|
-| 1 | 0.0113 s |
-| 2 | 0.0116 s |
-| 3 | 0.0111 s |
-| 4 | 0.0114 s |
-| 5 | 0.0112 s |
+> ### **RTO (local baseline): mean 0.0113 s ± 0.0006 s** over 500 observations, one instrument.
 
-> ### **RTO (local baseline): ~0.011 s** for 500 observations, one instrument.
-
-**Environment:** local filesystem raw store · SQLite domain store · single process ·
-one instrument · Python 3.12.
+The spread is narrow (σ ≈ 0.0006 s, ~5% of the mean), which is expected for a
+single-threaded, in-process rebuild with no network and no contention — and is itself a
+reason not to read much into the absolute figure: there is nothing here that production
+will actually be slow at.
 
 ## What this number is not
 
-It is the **first data point**, not a production RTO. Quoting it without this paragraph
+It is the **first data point**, not a production RTO. Quoting it without this section
 would turn a measurement into a false claim.
 
-- **Storage is local.** Production raw capture is S3-compatible object storage
-  ([ADR-0009](../architecture/18-architecture-decision-records.md#adr-0009--object-storage-for-immutable-raw-capture-and-deep-history)/[ED-004](01-engineering-decisions.md#ed-004--object-storage-realization)), which adds per-object network latency. A rebuild reading
-  thousands of objects is dominated by round-trips, not by the compute measured here.
+- **Storage is local disk.** Production raw capture is S3-compatible object storage
+  ([ADR-0009](../architecture/18-architecture-decision-records.md#adr-0009--object-storage-for-immutable-raw-capture-and-deep-history)/[ED-004](01-engineering-decisions.md#ed-004--object-storage-realization)), which adds a network round-trip per object. A rebuild reading
+  thousands of objects is dominated by latency, not by the compute measured here.
 - **The domain store is SQLite.** Production is PostgreSQL
   ([ADR-0008](../architecture/18-architecture-decision-records.md#adr-0008--postgresql-as-the-primary-system-of-record)/[ED-003](01-engineering-decisions.md#ed-003--postgresql-deployment-realization)); the write path and its concurrency behaviour differ entirely.
-- **Scope is one instrument and one metric.** Real recovery replays the whole universe
-  across every materialized artifact.
-- **No network, no contention, no cold caches.**
+- **Scope is one instrument, one metric, one raw object.** Real recovery replays the whole
+  universe across every materialized artifact.
+- **No network, no contention, no cold page cache, no other tenants.**
+- **One machine.** The figures above are specific to the hardware in the table.
 
-**Therefore: re-measure after deploy. Do not extrapolate.** The value of this number is
-that the *procedure* exists and passes — the mechanism is proven, and the figure becomes
-meaningful when it is re-run against real infrastructure.
+**Therefore: re-measure after deploy. Do not extrapolate.** The value of this exercise is
+that the *procedure* exists, is repeatable, and passes — the mechanism is proven, and the
+figure becomes meaningful when re-run against real infrastructure.
 
 ## Change log
 
 | Date | Change |
 |------|--------|
-| 2026-07-22 | Procedure authored and first measurement recorded (M5). Byte-identical reproduction confirmed; RTO ~0.011 s on the local baseline. |
+| 2026-07-22 | Procedure authored and first measurement recorded (M5). Byte-identical reproduction confirmed in all 20 samples; RTO mean 0.0113 s ± 0.0006 s on the local baseline, with full environment and dataset recorded for reproducibility. |
